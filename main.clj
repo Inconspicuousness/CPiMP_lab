@@ -7,9 +7,9 @@
 ;Если да, то возвращаем nil, что будет означать конец ленивой последовательности.
 ;Если coll не пустой, мы берем первые n элементов с помощью take и суммируем их с помощью apply +.
 (defn sum-of-n-elements [n coll]
-  (if (empty? coll)
-    nil
-    (cons (apply + (take n coll)) (sum-of-n-elements n (drop n coll)))))
+  (when (seq coll)
+    (let [sum (apply + (take n coll))]
+      (cons sum (lazy-seq (sum-of-n-elements n (drop n coll)))))))
 
 ;Затем мы рекурсивно вызываем sum-of-n-elements, 
 ;передавая остаток последовательности после n элементов (с помощью drop).
@@ -19,5 +19,3 @@
 (def result (sum-of-n-elements 3 numbers)) ; Вызов функции для получения ленивой последовательности
 
 (println "Суммы каждых 3 элементов:" result)
-
-
